@@ -10,6 +10,7 @@ import {
     Get,
     NotFoundException,
     Param,
+    ParseIntPipe,
     Patch,
     Post,
     Query,
@@ -35,9 +36,10 @@ export class UsersController {
     }
 
     @Get(':id') // @Get decorator to handle GET requests, taking an ID as a path parameter
-    getUserById(@Param('id') id: number) {
+    getUserById(@Param('id', ParseIntPipe) id: number) {
         // @Param decorator to extract the ID from the request parameters
-        const user = this.users.find((user) => user.id === Number(id));
+        // ParseIntPipe to ensure the ID is parsed as an integer + validated as a number
+        const user = this.users.find((user) => user.id === id);
         if (!user) {
             throw new NotFoundException();
         }
@@ -58,10 +60,14 @@ export class UsersController {
     }
 
     @Patch(':id') // @Patch decorator to handle PATCH requests, taking an ID as a path parameter
-    updateUser(@Param('id') id: number, @Body() user: UpdateUserDTO) {
+    updateUser(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() user: UpdateUserDTO,
+    ) {
         // @Param decorator to extract the ID from the request parameters
+        // ParseIntPipe to ensure the ID is parsed as an integer + validated as a number
         // @Body decorator to extract the user data from the request body
-        const existingUser = this.users.find((u) => u.id === Number(id));
+        const existingUser = this.users.find((u) => u.id === id);
         if (!existingUser) {
             throw new NotFoundException();
         }
@@ -70,9 +76,10 @@ export class UsersController {
     }
 
     @Delete(':id') // @Delete decorator to handle DELETE requests, taking an ID as a path parameter
-    deleteUser(@Param('id') id: number) {
+    deleteUser(@Param('id', ParseIntPipe) id: number) {
         // @Param decorator to extract the ID from the request parameters
-        const userIndex = this.users.findIndex((u) => u.id === Number(id));
+        // ParseIntPipe to ensure the ID is parsed as an integer + validated as a number
+        const userIndex = this.users.findIndex((u) => u.id === id);
         if (userIndex === -1) {
             throw new NotFoundException();
         }
