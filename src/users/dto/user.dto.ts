@@ -13,3 +13,9 @@ export type CreateUserDTO = {
     email: string;
     age: number;
 };
+
+export type UpdateUserDTO = {
+    name?: string;
+    email?: string;
+    age?: number;
+};

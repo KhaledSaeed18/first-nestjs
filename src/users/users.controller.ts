@@ -10,10 +10,10 @@ import {
     Get,
     NotFoundException,
     Param,
+    Patch,
     Post,
-    Put,
 } from '@nestjs/common';
-import type { CreateUserDTO, UserDTO } from './dto/user.dto';
+import type { CreateUserDTO, UpdateUserDTO, UserDTO } from './dto/user.dto';
 
 @Controller('users') // Define the route prefix for this controller `/users` using the @Controller decorator
 export class UsersController {
@@ -50,13 +50,26 @@ export class UsersController {
         return { message: 'User created successfully' };
     }
 
-    @Put(':id') // @Put decorator to handle PUT requests, taking an ID as a path parameter
-    updateUser() {
+    @Patch(':id') // @Patch decorator to handle PATCH requests, taking an ID as a path parameter
+    updateUser(@Param('id') id: number, @Body() user: UpdateUserDTO) {
+        // @Param decorator to extract the ID from the request parameters
+        // @Body decorator to extract the user data from the request body
+        const existingUser = this.users.find((u) => u.id === Number(id));
+        if (!existingUser) {
+            throw new NotFoundException();
+        }
+        Object.assign(existingUser, user);
         return { message: 'User updated successfully' };
     }
 
     @Delete(':id') // @Delete decorator to handle DELETE requests, taking an ID as a path parameter
-    deleteUser() {
+    deleteUser(@Param('id') id: number) {
+        // @Param decorator to extract the ID from the request parameters
+        const userIndex = this.users.findIndex((u) => u.id === Number(id));
+        if (userIndex === -1) {
+            throw new NotFoundException();
+        }
+        this.users.splice(userIndex, 1);
         return { message: 'User deleted successfully' };
     }
 }
