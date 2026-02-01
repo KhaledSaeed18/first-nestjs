@@ -1,7 +1,21 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
-import { UserDTO } from './dto/user.dto';
+// src/users/users.controller.ts
+// UsersController to handle user-related HTTP requests
+// This controller provides endpoints to manage users
+// In nestjs, controllers are responsible for handling incoming requests and returning responses to the client.
 
-@Controller('users')
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
+} from '@nestjs/common';
+import type { CreateUserDTO, UserDTO } from './dto/user.dto';
+
+@Controller('users') // Define the route prefix for this controller `/users` using the @Controller decorator
 export class UsersController {
     private users: UserDTO[] = [
         { id: 1, name: 'John Doe', email: 'john.doe@example.com', age: 30 },
@@ -13,8 +27,26 @@ export class UsersController {
         return this.users.map(({ id, name }) => ({ id, name }));
     }
 
+    @Get(':id') // @Get decorator to handle GET requests, taking an ID as a path parameter
+    getUserById(@Param('id') id: number) {
+        // @Param decorator to extract the ID from the request parameters
+        const user = this.users.find((user) => user.id === Number(id));
+        if (!user) {
+            throw new NotFoundException();
+        }
+        return user;
+    }
+
     @Post() // @Post decorator to handle POST requests
-    createUser() {
+    createUser(@Body() user: CreateUserDTO) {
+        // @Body decorator to extract the user data from the request body
+        const newUser: UserDTO = {
+            id: this.users.length + 1,
+            name: user.name,
+            email: user.email,
+            age: user.age,
+        };
+        this.users.push(newUser);
         return { message: 'User created successfully' };
     }
 
