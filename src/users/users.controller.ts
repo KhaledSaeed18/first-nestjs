@@ -12,6 +12,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
 } from '@nestjs/common';
 import type { CreateUserDTO, UpdateUserDTO, UserDTO } from './dto/user.dto';
 
@@ -23,7 +24,13 @@ export class UsersController {
     ];
 
     @Get() // @Get decorator to handle GET requests
-    getUsers() {
+    getUsers(@Query('name') name?: string) {
+        // @Query decorator to extract query parameters from the request `?name=`
+        if (name) {
+            return this.users.filter((user) =>
+                user.name.toLowerCase().includes(name.toLowerCase()),
+            );
+        }
         return this.users.map(({ id, name }) => ({ id, name }));
     }
 
