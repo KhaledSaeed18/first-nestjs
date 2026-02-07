@@ -24,7 +24,7 @@ export class User {
     })
     email: string;
 
-    @Column()
+    @Column({ select: false }) // Exclude password from query results by default for security
     password: string;
 
     @Column()

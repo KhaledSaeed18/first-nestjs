@@ -45,18 +45,6 @@ export class CreateUserDto {
 export class UpdateUserDto {
     @IsString()
     @IsOptional()
-    userName?: string;
-
-    @IsEmail()
-    @IsOptional()
-    email?: string;
-
-    @IsString()
-    @IsOptional()
-    password?: string;
-
-    @IsString()
-    @IsOptional()
     major?: string;
 
     @IsBoolean()
