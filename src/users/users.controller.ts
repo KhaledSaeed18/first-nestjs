@@ -41,12 +41,12 @@ export class UsersController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserDto) {
         return this.usersService.update(id, body); // Use the update method from the UsersService to update an existing user identified by their ID with the data provided in the request body, which should match the UpdateUserDto structure
     }
 
     @Delete(':id')
-    delete(@Param('id') id: string) {
+    delete(@Param('id', ParseIntPipe) id: number) {
         return this.usersService.delete(id); // Use the delete method from the UsersService to remove a user identified by their ID
     }
 }
