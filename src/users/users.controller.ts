@@ -1,8 +1,3 @@
-// src/users/users.controller.ts
-// UsersController to handle user-related HTTP requests
-// This controller provides endpoints to manage users
-// In nestjs, controllers are responsible for handling incoming requests and returning responses to the client.
-
 import {
     Body,
     Controller,
@@ -15,75 +10,62 @@ import {
     Post,
     Query,
 } from '@nestjs/common';
-import type { CreateUserDTO, UpdateUserDTO, UserDTO } from './dto/user.dto';
+import { CreateUserDto, UpdateUserDto, User } from './dto/user.dto';
 
-@Controller('users') // Define the route prefix for this controller `/users` using the @Controller decorator
+@Controller('users')
 export class UsersController {
-    private users: UserDTO[] = [
-        { id: 1, name: 'John Doe', email: 'john.doe@example.com', age: 30 },
-        { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', age: 25 },
+    private users: User[] = [
+        { id: 1, name: 'Mohammad', email: 'test@gmail.com', age: 28 },
+        { id: 2, name: 'Ahmad', email: 'test@gmail.com', age: 33 },
     ];
 
-    @Get() // @Get decorator to handle GET requests
-    getUsers(@Query('name') name?: string) {
-        // @Query decorator to extract query parameters from the request `?name=`
+    @Get()
+    getAll(@Query('name') name: string) {
         if (name) {
-            return this.users.filter((user) =>
-                user.name.toLowerCase().includes(name.toLowerCase()),
-            );
+            return this.users.filter((user) => user.name == name);
         }
-        return this.users.map(({ id, name }) => ({ id, name }));
+        return this.users;
     }
 
-    @Get(':id') // @Get decorator to handle GET requests, taking an ID as a path parameter
-    getUserById(@Param('id', ParseIntPipe) id: number) {
-        // @Param decorator to extract the ID from the request parameters
-        // ParseIntPipe to ensure the ID is parsed as an integer + validated as a number
-        const user = this.users.find((user) => user.id === id);
-        if (!user) {
-            throw new NotFoundException();
+    @Get(':id')
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        const user: User | undefined = this.users.find((user) => user.id == id);
+        if (user) {
+            return user;
         }
-        return user;
+        throw new NotFoundException();
     }
 
-    @Post() // @Post decorator to handle POST requests
-    createUser(@Body() user: CreateUserDTO) {
-        // @Body decorator to extract the user data from the request body
-        const newUser: UserDTO = {
-            id: this.users.length + 1,
-            name: user.name,
-            email: user.email,
-            age: user.age,
+    @Post()
+    create(@Body() body: CreateUserDto) {
+        const newUser = {
+            id: this.users[this.users.length - 1].id + 1,
+            name: body.name,
+            email: body.email,
+            age: body.age,
         };
         this.users.push(newUser);
-        return { message: 'User created successfully' };
+        return newUser;
     }
 
-    @Patch(':id') // @Patch decorator to handle PATCH requests, taking an ID as a path parameter
-    updateUser(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() user: UpdateUserDTO,
-    ) {
-        // @Param decorator to extract the ID from the request parameters
-        // ParseIntPipe to ensure the ID is parsed as an integer + validated as a number
-        // @Body decorator to extract the user data from the request body
-        const existingUser = this.users.find((u) => u.id === id);
-        if (!existingUser) {
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() body: UpdateUserDto) {
+        const userIndex = this.users.findIndex((user) => user.id == +id);
+        if (userIndex == -1) {
             throw new NotFoundException();
         }
-        Object.assign(existingUser, user);
-        return { message: 'User updated successfully' };
+        this.users[userIndex].name = body.name || this.users[userIndex].name;
+        this.users[userIndex].email = body.email || this.users[userIndex].email;
+        this.users[userIndex].age = body.age || this.users[userIndex].age;
+        return this.users[userIndex];
     }
 
-    @Delete(':id') // @Delete decorator to handle DELETE requests, taking an ID as a path parameter
-    deleteUser(@Param('id', ParseIntPipe) id: number) {
-        // @Param decorator to extract the ID from the request parameters
-        // ParseIntPipe to ensure the ID is parsed as an integer + validated as a number
-        const userIndex = this.users.findIndex((u) => u.id === id);
-        if (userIndex === -1) {
+    @Delete(':id')
+    delete(@Param('id') id: string) {
+        const userIndex = this.users.findIndex((user) => user.id == +id);
+        if (userIndex == -1) {
             throw new NotFoundException();
         }
-        this.users.splice(userIndex, 1);
-        return { message: 'User deleted successfully' };
+        return this.users.splice(userIndex, 1);
     }
 }
