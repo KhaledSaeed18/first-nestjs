@@ -25,6 +25,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             password: 'postgres',
             database: 'test_db',
             entities: [],
+            autoLoadEntities: true, // Automatically load entities from the project
             synchronize: true, // ! In development only
             retryAttempts: 5, // Optional: number of retry attempts for database connection
             logging: true, // Optional: enable logging of database queries and operations
