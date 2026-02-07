@@ -5,35 +5,61 @@ import {
     IsEmail,
     IsString,
     IsNotEmpty,
-    IsInt,
-    Min,
-    Max,
+    IsBoolean,
+    IsOptional,
 } from 'class-validator'; // Importing validation decorators from class-validator package
 
 export class User {
     id: number;
-    name: string;
+    userName: string;
     email: string;
-    age: number;
+    password: string;
+    major: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
 }
 
 export class CreateUserDto {
     @IsString() // Validates that the value is a string
     @IsNotEmpty() // Validates that the value is not empty
-    name: string;
+    userName: string;
 
     @IsEmail() // Validates that the value is a valid email address
+    @IsNotEmpty()
     email: string;
 
-    @IsInt() // Validates that the value is an integer
-    @Min(10) // Validates that the value is greater than or equal to 10
-    @Max(80, { message: 'Age must be less than or equal to 80' }) // Validates that the value is less than or equal to 80 with a custom error message
-    age: number;
+    @IsString()
+    @IsNotEmpty()
+    password: string;
+
+    @IsString()
+    @IsNotEmpty()
+    major: string;
+
+    @IsBoolean()
+    isActive: boolean;
 }
 
 export class UpdateUserDto {
-    @IsInt() // Validates that the value is an integer
-    name?: string;
+    @IsString()
+    @IsOptional()
+    userName?: string;
+
+    @IsEmail()
+    @IsOptional()
     email?: string;
-    age?: number;
+
+    @IsString()
+    @IsOptional()
+    password?: string;
+
+    @IsString()
+    @IsOptional()
+    major?: string;
+
+    @IsBoolean()
+    @IsOptional()
+    isActive?: boolean;
 }

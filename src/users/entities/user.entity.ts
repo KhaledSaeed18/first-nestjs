@@ -12,10 +12,16 @@ export class User {
     @PrimaryGeneratedColumn() // Primary key column that auto-increments with each new user
     id: number;
 
-    @Column() // Regular column to store the user's name
+    @Column({
+        unique: true, // Ensure that the userName is unique across all users in the database
+        nullable: false, // Ensure that the userName cannot be null in the database
+    }) // Regular column to store the user's name
     userName: string;
 
-    @Column()
+    @Column({
+        unique: true, // Ensure that the email is unique across all users in the database
+        nullable: false, // Ensure that the email cannot be null in the database
+    })
     email: string;
 
     @Column()
