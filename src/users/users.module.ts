@@ -10,5 +10,6 @@ import { UsersController } from './users.controller';
 @Module({
     providers: [UsersService], // Register UsersService as a provider
     controllers: [UsersController], // Register UsersController as a controller
+    exports: [UsersService], // Export UsersService to make it available for injection in other modules if needed
 }) // Define the UsersModule using the @Module decorator
 export class UsersModule {}
