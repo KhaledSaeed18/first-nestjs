@@ -28,7 +28,8 @@ export class UsersService {
         if (user) {
             return user;
         }
-        throw new NotFoundException();
+        throw new NotFoundException(); // Throwing NotFoundException will automatically send a 404 response to the client if the user is not found
+        // Built in HTTP exception provided by NestJS to handle not found errors gracefully
     }
 
     // The create method adds a new user to the in-memory array. It generates a new ID by taking the last user's ID and incrementing it by one. It then pushes the new user object into the users array and returns it.
