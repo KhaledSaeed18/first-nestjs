@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import { UsersModule } from 'src/users/users.module';
+import { Product } from './entities/product.entity';
 
 @Module({
+    imports: [TypeOrmModule.forFeature([Product])],
     controllers: [ProductsController],
     providers: [ProductsService],
-    imports: [UsersModule], // Import UsersModule to make UsersService available for injection in ProductsController
 })
 export class ProductsModule {}
