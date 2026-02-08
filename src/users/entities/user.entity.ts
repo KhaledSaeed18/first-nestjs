@@ -5,7 +5,9 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    OneToOne,
 } from 'typeorm';
+import { Address } from './address.entity';
 
 @Entity('users')
 export class User {
@@ -41,4 +43,7 @@ export class User {
 
     @DeleteDateColumn() // Automatically set to the current date and time when the user is soft-deleted (not actually removed from the database, but marked as deleted)
     deletedAt: Date;
+
+    @OneToOne(() => Address, (address) => address.user) // Define a one-to-one relationship with the Address entity
+    address: Address; // This will allow us to access the user's address through this property
 }
