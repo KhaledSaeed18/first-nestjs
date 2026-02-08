@@ -1,3 +1,4 @@
+import { User } from 'src/users/entities/user.entity';
 import {
     Entity,
     Column,
@@ -5,6 +6,7 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    ManyToOne,
 } from 'typeorm';
 
 @Entity('products')
@@ -35,4 +37,7 @@ export class Product {
 
     @DeleteDateColumn()
     deletedAt: Date;
+
+    @ManyToOne(() => User, (user) => user.products) // Define a many-to-one relationship with the User entity
+    user: User;
 }
